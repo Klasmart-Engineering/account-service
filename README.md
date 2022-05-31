@@ -7,3 +7,7 @@
 ## Running
 
 - `go run main.go`
+
+## Testing
+
+- `go test -v`

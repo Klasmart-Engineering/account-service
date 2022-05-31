@@ -8,9 +8,10 @@ import (
 func main() {
 	fmt.Println("Starting KidsLoop Account Service")
 
-	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		fmt.Fprintf(w, "Hello from account service")
-	})
-
+	http.HandleFunc("/", BaseHandler)
 	http.ListenAndServe("localhost:8080", nil)
+}
+
+func BaseHandler(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "Hello from account service")
 }

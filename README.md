@@ -2,7 +2,7 @@
 
 ## Installation
 
-- Install Go: https://go.dev/doc/install
+- Install Go 1.18: https://go.dev/doc/install
 
 ## Running
 

@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func TestBaseHandler(t *testing.T) {
+func TestRootHandler(t *testing.T) {
 	t.Run("returns a friendly message", func(t *testing.T) {
 		request, _ := http.NewRequest(http.MethodGet, "/", nil)
 		response := httptest.NewRecorder()
 
-		BaseHandler(response, request)
+		RootHandler(response, request)
 
 		got := response.Body.String()
 		want := "Hello from account service"

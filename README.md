@@ -6,7 +6,7 @@
 
 ## Running
 
-- `go run src/main.go` or `docker-compose up`
+- `go run main.go` or `docker-compose up`
 
 ## Testing
 

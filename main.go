@@ -2,16 +2,24 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"kidsloop/account-service/controllers"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	fmt.Println("Starting KidsLoop Account Service")
 
-	http.HandleFunc("/", RootHandler)
-	http.ListenAndServe("localhost:8080", nil)
+	r := gin.Default()
+	r.GET("/", HealthCheck)
+
+	r.GET("/accounts/:accountId", controllers.GetAccount)
+	r.PUT("/accounts/", controllers.CreateAccount)
+	r.DELETE("/accounts/:accountId", controllers.DeleteAccount)
+
+	r.Run()
 }
 
-func RootHandler(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "Hello from account service")
+func HealthCheck(c *gin.Context) {
+	c.String(200, "Server is running")
 }

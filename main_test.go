@@ -1,20 +1,20 @@
 package main
 
 import (
-	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
 func TestRootHandler(t *testing.T) {
 	t.Run("returns a friendly message", func(t *testing.T) {
-		request, _ := http.NewRequest(http.MethodGet, "/", nil)
 		response := httptest.NewRecorder()
-
-		RootHandler(response, request)
+		c, _ := gin.CreateTestContext(response)
+		HealthCheck(c)
 
 		got := response.Body.String()
-		want := "Hello from account service"
+		want := "Server is running"
 
 		if got != want {
 			t.Errorf("got %s, want %s", got, want)

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"kidsloop/account-service/controllers"
+	"kidsloop/account-service/handler"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,9 +13,9 @@ func main() {
 	r := gin.Default()
 	r.GET("/", HealthCheck)
 
-	r.GET("/accounts/:accountId", controllers.GetAccount)
-	r.PUT("/accounts/", controllers.CreateAccount)
-	r.DELETE("/accounts/:accountId", controllers.DeleteAccount)
+	r.GET("/accounts/:accountId", handler.GetAccount)
+	r.PUT("/accounts/", handler.CreateAccount)
+	r.DELETE("/accounts/:accountId", handler.DeleteAccount)
 
 	r.Run()
 }

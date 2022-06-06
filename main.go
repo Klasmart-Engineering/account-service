@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	fmt.Println("Starting KidsLoop Account Service")
+	fmt.Println("Starting KidsLoop Account Service on http://localhost:8080")
 
 	http.HandleFunc("/", RootHandler)
-	http.ListenAndServe("localhost:8080", nil)
+	http.ListenAndServe(":8080", nil)
 }
 
 func RootHandler(w http.ResponseWriter, req *http.Request) {

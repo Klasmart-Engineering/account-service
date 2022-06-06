@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Starting KidsLoop Account Service")
+	fmt.Println("Starting KidsLoop Account Service on http://localhost:8080")
 
 	r := gin.Default()
 	r.GET("/", HealthCheck)

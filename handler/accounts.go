@@ -20,7 +20,7 @@ func CreateAccount(c *gin.Context) {
 }
 
 // GetAccount ... Get Account
-// @Summary  Get details of account
+// @Summary  Get details of an account
 // @Param    accountId  path      string  true  "Account ID"
 // @Success  200        {object}  model.Account
 // @Failure  400,500    {object}  model.APIError

@@ -11,11 +11,11 @@ import (
 )
 
 // @title    accounts-service documentation
-// @version  1.0.0
+// @version  0.0.1
 // @host     localhost:8080
 
 func main() {
-	fmt.Println("Starting KidsLoop Account Service on http://localhost:8080")
+	fmt.Println("Starting account-service on http://localhost:8080")
 
 	router := SetUpRouter()
 	router.Run()
@@ -34,5 +34,5 @@ func SetUpRouter() *gin.Engine {
 }
 
 func HealthCheck(c *gin.Context) {
-	c.String(200, "Server is running")
+	c.String(200, "account-service is running")
 }

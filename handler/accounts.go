@@ -2,7 +2,6 @@ package handler
 
 import (
 	"fmt"
-	"kidsloop/account-service/model"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +14,7 @@ import (
 func CreateAccount(c *gin.Context) {
 	fmt.Println("CreateAccount")
 	c.JSON(200, gin.H{
-		"accountId": "abc123",
+		"account_id": "abc123",
 	})
 }
 
@@ -27,11 +26,10 @@ func CreateAccount(c *gin.Context) {
 // @Router   /accounts/{accountId} [get]
 func GetAccount(c *gin.Context) {
 	fmt.Println("GetAccount")
-	accountId := c.Param("accountId")
-	account := model.Account{
-		ID: accountId,
-	}
-	c.JSON(200, account)
+	id := c.Param("id")
+	c.JSON(200, gin.H{
+		"id": id,
+	})
 }
 
 // DeleteAccount ... Delete Account
@@ -42,8 +40,8 @@ func GetAccount(c *gin.Context) {
 // @Router   /accounts/{accountId} [delete]
 func DeleteAccount(c *gin.Context) {
 	fmt.Println("DeleteAccount")
-	accountId := c.Param("accountId")
+	id := c.Param("id")
 	c.JSON(200, gin.H{
-		"accountId": accountId,
+		"id": id,
 	})
 }

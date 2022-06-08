@@ -9,22 +9,22 @@ import (
 func CreateAccount(c *gin.Context) {
 	fmt.Println("CreateAccount")
 	c.JSON(200, gin.H{
-		"accountId": "abc123",
+		"account_id": "abc123",
 	})
 }
 
 func GetAccount(c *gin.Context) {
 	fmt.Println("GetAccount")
-	accountId := c.Param("accountId")
+	id := c.Param("id")
 	c.JSON(200, gin.H{
-		"accountId": accountId,
+		"id": id,
 	})
 }
 
 func DeleteAccount(c *gin.Context) {
 	fmt.Println("DeleteAccount")
-	accountId := c.Param("accountId")
+	id := c.Param("id")
 	c.JSON(200, gin.H{
-		"accountId": accountId,
+		"id": id,
 	})
 }

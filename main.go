@@ -10,7 +10,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles" // swagger embed files
 )
 
-// @title    accounts-service documentation
+// @title    account-service documentation
 // @version  0.0.1
 // @host     localhost:8080
 

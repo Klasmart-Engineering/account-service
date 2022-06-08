@@ -6,8 +6,8 @@ COPY . .
 
 RUN go install -v ./...
 
-RUN go build -o ./accounts-service ./main.go
+RUN go build -o ./account-service ./main.go
 
 EXPOSE 8080
 
-CMD [ "./accounts-service" ]
+CMD [ "./account-service" ]

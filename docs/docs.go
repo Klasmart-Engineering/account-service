@@ -43,7 +43,7 @@ const docTemplate = `{
         },
         "/accounts/{accountId}": {
             "get": {
-                "summary": "Get details of account",
+                "summary": "Get details of an account",
                 "parameters": [
                     {
                         "type": "string",
@@ -134,7 +134,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0.0",
+	Version:          "0.0.1",
 	Host:             "localhost:8080",
 	BasePath:         "",
 	Schemes:          []string{},

@@ -16,7 +16,7 @@ host: localhost:8080
 info:
   contact: {}
   title: accounts-service documentation
-  version: 1.0.0
+  version: 0.0.1
 paths:
   /accounts:
     put:
@@ -76,5 +76,5 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.APIError'
-      summary: Get details of account
+      summary: Get details of an account
 swagger: "2.0"

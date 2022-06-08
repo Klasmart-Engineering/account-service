@@ -3,7 +3,7 @@
     "info": {
         "title": "accounts-service documentation",
         "contact": {},
-        "version": "1.0.0"
+        "version": "0.0.1"
     },
     "host": "localhost:8080",
     "paths": {
@@ -34,7 +34,7 @@
         },
         "/accounts/{accountId}": {
             "get": {
-                "summary": "Get details of account",
+                "summary": "Get details of an account",
                 "parameters": [
                     {
                         "type": "string",

@@ -1,5 +1,5 @@
 on: [pull_request]
-name: accounts-service
+name: account-service
 jobs:
   test:
     runs-on: ubuntu-latest

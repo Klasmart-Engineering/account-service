@@ -15,7 +15,7 @@ func TestRootHandler(t *testing.T) {
 		HealthCheck(c)
 
 		got := response.Body.String()
-		want := "Server is running"
+		want := "account-service is running"
 
 		if got != want {
 			t.Errorf("got %s, want %s", got, want)

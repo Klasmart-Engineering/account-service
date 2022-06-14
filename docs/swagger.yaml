@@ -34,12 +34,12 @@ paths:
           schema:
             $ref: '#/definitions/model.APIError'
       summary: Create a new account
-  /accounts/{accountId}:
+  /accounts/{id}:
     delete:
       parameters:
       - description: Account ID
         in: query
-        name: accountId
+        name: id
         required: true
         type: string
       responses:
@@ -60,7 +60,7 @@ paths:
       parameters:
       - description: Account ID
         in: path
-        name: accountId
+        name: id
         required: true
         type: string
       responses:

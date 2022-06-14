@@ -41,14 +41,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/accounts/{accountId}": {
+        "/accounts/{id}": {
             "get": {
                 "summary": "Get details of an account",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Account ID",
-                        "name": "accountId",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -80,7 +80,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Account ID",
-                        "name": "accountId",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }

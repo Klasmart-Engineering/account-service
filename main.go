@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
+	db "kidsloop/account-service/database"
 	_ "kidsloop/account-service/docs"
 	"kidsloop/account-service/handler"
+	_ "kidsloop/account-service/util"
+	"log"
 
-	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"   // gin-swagger middleware
-	"github.com/swaggo/gin-swagger/swaggerFiles" // swagger embed files
+	"github.com/joho/godotenv"
 )
 
 // @title    account-service documentation
@@ -15,24 +15,23 @@ import (
 // @host     localhost:8080
 
 func main() {
-	fmt.Println("Starting account-service on http://localhost:8080")
+	log.Println("Starting account-service")
 
-	router := SetUpRouter()
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Warning: no .env file found.")
+	}
+
+	err = db.InitDB()
+	if err != nil {
+		log.Println("Failed to connect to postgres:")
+		log.Fatal(err)
+	}
+
+	log.Println("Connected to Postgres")
+
+	router := handler.SetUpRouter()
 	router.Run()
-}
 
-func SetUpRouter() *gin.Engine {
-	r := gin.Default()
-	r.GET("/", HealthCheck)
-
-	r.GET("/accounts/:id", handler.GetAccount)
-	r.PUT("/accounts", handler.CreateAccount)
-	r.DELETE("/accounts/:id", handler.DeleteAccount)
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	return r
-}
-
-func HealthCheck(c *gin.Context) {
-	c.String(200, "account-service is running")
+	log.Println("Started router")
 }

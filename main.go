@@ -4,7 +4,7 @@ import (
 	db "kidsloop/account-service/database"
 	_ "kidsloop/account-service/docs"
 	"kidsloop/account-service/handler"
-	_ "kidsloop/account-service/util"
+	util "kidsloop/account-service/util"
 	"log"
 	"os"
 
@@ -35,7 +35,7 @@ func main() {
 	// Create New Relic agent ("Application")
 	nrApp, nrErr := newrelic.NewApplication(
 		newrelic.ConfigAppName("New Relic Monitoring"),
-		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
+		newrelic.ConfigLicense(util.GetEnvOrPanic("NEW_RELIC_LICENSE_KEY")),
 		newrelic.ConfigDebugLogger(os.Stdout),
 	)
 	if nrErr != nil {

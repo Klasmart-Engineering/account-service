@@ -35,7 +35,7 @@ func main() {
 	// Create New Relic agent ("Application")
 	nrApp, nrErr := newrelic.NewApplication(
 		newrelic.ConfigAppName("New Relic Monitoring"),
-		newrelic.ConfigLicense("__NEW_RELIC_LICENSE_KEY"),
+		newrelic.ConfigLicense(os.Getenv("NEW_RELIC_LICENSE_KEY")),
 		newrelic.ConfigDebugLogger(os.Stdout),
 	)
 	if nrErr != nil {

@@ -34,8 +34,7 @@ func main() {
 	router := handler.SetUpRouter()
 
 	// Create New Relic agent ("Application"), if NR license key exists
-	nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY")
-	if nrKey != "" {
+	if nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY"); nrKey != "" {
 		nrApp, nrErr := newrelic.NewApplication(
 			newrelic.ConfigAppName("New Relic Monitoring"),
 			newrelic.ConfigLicense(nrKey),

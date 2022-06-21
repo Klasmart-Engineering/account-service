@@ -4,7 +4,6 @@ import (
 	db "kidsloop/account-service/database"
 	_ "kidsloop/account-service/docs"
 	"kidsloop/account-service/handler"
-	util "kidsloop/account-service/util"
 	"log"
 	"os"
 
@@ -32,18 +31,22 @@ func main() {
 	}
 	log.Println("Connected to Postgres")
 
-	// Create New Relic agent ("Application")
-	nrApp, nrErr := newrelic.NewApplication(
-		newrelic.ConfigAppName("New Relic Monitoring"),
-		newrelic.ConfigLicense(util.GetEnvOrPanic("NEW_RELIC_LICENSE_KEY")),
-		newrelic.ConfigDebugLogger(os.Stdout),
-	)
-	if nrErr != nil {
-		log.Println("Unable to create New Relic Monitoring. Reason:", nrErr)
+	router := handler.SetUpRouter()
+
+	// Create New Relic agent ("Application"), if NR license key exists
+	nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY")
+	if nrKey != "" {
+		nrApp, nrErr := newrelic.NewApplication(
+			newrelic.ConfigAppName("New Relic Monitoring"),
+			newrelic.ConfigLicense(nrKey),
+			newrelic.ConfigDebugLogger(os.Stdout),
+		)
+		if nrErr != nil {
+			log.Println("Unable to create New Relic Monitoring agent. Reason:", nrErr)
+		}
+		router.Use(nrgin.Middleware(nrApp))
 	}
 
-	router := handler.SetUpRouter()
-	router.Use(nrgin.Middleware(nrApp))
 	router.Run()
 
 	log.Println("Started router")

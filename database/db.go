@@ -8,6 +8,7 @@ import (
 	util "kidsloop/account-service/util"
 
 	_ "github.com/newrelic/go-agent/v3/integrations/nrpq"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 type DB struct {
@@ -15,6 +16,8 @@ type DB struct {
 }
 
 var Database DB
+
+var NrApp *newrelic.Application
 
 func InitDB() error {
 	connStr := fmt.Sprintf(

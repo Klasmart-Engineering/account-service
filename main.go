@@ -43,7 +43,8 @@ func main() {
 		if nrErr != nil {
 			log.Println("Unable to create New Relic Monitoring agent. Reason:", nrErr)
 		}
-		router.Use(nrgin.Middleware(nrApp))
+		router.Use(nrgin.Middleware(nrApp)) // Instrument web framework
+		db.NrApp = nrApp                    // Prepare to instrument DB calls
 	}
 
 	router.Run()

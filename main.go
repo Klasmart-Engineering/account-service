@@ -4,12 +4,12 @@ import (
 	db "kidsloop/account-service/database"
 	_ "kidsloop/account-service/docs"
 	"kidsloop/account-service/handler"
+	"kidsloop/account-service/monitoring"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
-	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 // @title    account-service documentation
@@ -35,16 +35,8 @@ func main() {
 
 	// Create New Relic agent ("Application"), if NR license key exists
 	if nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY"); nrKey != "" {
-		nrApp, nrErr := newrelic.NewApplication(
-			newrelic.ConfigAppName("New Relic Monitoring"),
-			newrelic.ConfigLicense(nrKey),
-			newrelic.ConfigDebugLogger(os.Stdout),
-		)
-		if nrErr != nil {
-			log.Println("Unable to create New Relic Monitoring agent. Reason:", nrErr)
-		}
-		router.Use(nrgin.Middleware(nrApp)) // Instrument web framework
-		db.NrApp = nrApp                    // Prepare to instrument DB calls
+		monitoring.SetupNewRelic("account-service", nrKey)
+		router.Use(nrgin.Middleware(monitoring.NrApp)) // Instrument web framework                            // Prepare to instrument DB calls
 	}
 
 	router.Run()

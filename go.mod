@@ -45,6 +45,7 @@ require (
 	github.com/newrelic/go-agent v3.16.1+incompatible // indirect
 	github.com/newrelic/go-agent/v3 v3.16.1
 	github.com/newrelic/go-agent/v3/integrations/nrgin v1.1.2
+	github.com/newrelic/go-agent/v3/integrations/nrpq v1.1.1
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/testify v1.7.2 // indirect

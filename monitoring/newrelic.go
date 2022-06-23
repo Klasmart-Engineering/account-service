@@ -11,7 +11,7 @@ var NrApp *newrelic.Application
 
 func SetupNewRelic(serviceName string, licenseKey string) {
 	app, nrErr := newrelic.NewApplication(
-		newrelic.ConfigAppName("New Relic Monitoring"),
+		newrelic.ConfigAppName(serviceName),
 		newrelic.ConfigLicense(licenseKey),
 		newrelic.ConfigDebugLogger(os.Stdout),
 	)

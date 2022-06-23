@@ -36,7 +36,7 @@ func main() {
 	// Create New Relic agent ("Application"), if NR license key exists
 	if nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY"); nrKey != "" {
 		monitoring.SetupNewRelic("account-service", nrKey)
-		router.Use(nrgin.Middleware(monitoring.NrApp)) // Instrument web framework                            // Prepare to instrument DB calls
+		router.Use(nrgin.Middleware(monitoring.NrApp)) // Instrument web framework
 	}
 
 	router.Run()

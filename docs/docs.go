@@ -18,7 +18,10 @@ const docTemplate = `{
     "paths": {
         "/accounts": {
             "post": {
-                "summary": "Create a new account",
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create a new account and associated android group and android. All newly created entities are returned.",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -37,6 +40,9 @@ const docTemplate = `{
         },
         "/accounts/{id}": {
             "get": {
+                "tags": [
+                    "accounts"
+                ],
                 "summary": "Get details of an account",
                 "parameters": [
                     {
@@ -75,6 +81,9 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "tags": [
+                    "accounts"
+                ],
                 "summary": "Delete an account",
                 "parameters": [
                     {

@@ -60,7 +60,10 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.ErrorResponse'
-      summary: Create a new account
+      summary: Create a new account and associated android group and android. All
+        newly created entities are returned.
+      tags:
+      - accounts
   /accounts/{id}:
     delete:
       parameters:
@@ -87,6 +90,8 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Delete an account
+      tags:
+      - accounts
     get:
       parameters:
       - description: Account ID
@@ -112,4 +117,6 @@ paths:
           schema:
             $ref: '#/definitions/model.ErrorResponse'
       summary: Get details of an account
+      tags:
+      - accounts
 swagger: "2.0"

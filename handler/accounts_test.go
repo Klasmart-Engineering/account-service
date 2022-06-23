@@ -45,9 +45,19 @@ func TestCreateAccount200(t *testing.T) {
 	_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
 
 	assert.Equal(t, 200, response.Code)
-	assert.NotEqual(t, "", data.Account.ID)
-	assert.NotEqual(t, "", data.Android.ID)
-	assert.NotEqual(t, "", data.AndroidGroup.ID)
+	assert.True(t, test_util.IsValidUUID(data.Account.ID))
+	assert.True(t, test_util.IsValidUUID(data.Android.ID))
+	assert.True(t, test_util.IsValidUUID(data.AndroidGroup.ID))
+	assert.Equal(t, data.AndroidGroup.ID, data.Android.AndroidGroupID)
+
+	account, err := db.Database.GetAccount(nil, data.Account.ID)
+	assert.Nil(t, err)
+	assert.Equal(t, account.ID, data.Account.ID)
+
+	android, err := db.Database.GetAndroid(nil, data.Android.ID)
+	assert.Nil(t, err)
+	assert.Equal(t, android.ID, data.Android.ID)
+	assert.Equal(t, android.AndroidGroupID, data.AndroidGroup.ID)
 }
 
 func TestGetAccount200(t *testing.T) {

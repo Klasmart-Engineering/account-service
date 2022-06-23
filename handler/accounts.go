@@ -10,7 +10,8 @@ import (
 )
 
 // CreateAccount ... Create Account
-// @Summary  Create a new account
+// @Summary  Create a new account and associated android group and android. All newly created entities are returned.
+// @Tags     accounts
 // @Success  200  {object}  model.CreateAccountResponse
 // @Failure  500  {object}  model.ErrorResponse
 // @Router   /accounts [post]
@@ -47,6 +48,7 @@ func CreateAccount(c *gin.Context) {
 
 // GetAccount ... Get Account
 // @Summary  Get details of an account
+// @Tags     accounts
 // @Param    id           path      string  true  "Account ID"
 // @Success  200          {object}  model.Account
 // @Failure  400,404,500  {object}  model.ErrorResponse
@@ -73,6 +75,7 @@ func GetAccount(c *gin.Context) {
 
 // DeleteAccount ... Delete Account
 // @Summary  Delete an account
+// @Tags     accounts
 // @Param    id           path      string  true  "Account ID"
 // @Success  200          {object}  model.Account
 // @Failure  400,404,500  {object}  model.ErrorResponse

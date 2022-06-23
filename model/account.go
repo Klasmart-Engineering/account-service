@@ -14,7 +14,8 @@ type Android struct {
 }
 
 type AndroidGroup struct {
-	ID string `json:"id"`
+	ID        string `json:"id"`
+	AccountID string `json:"account_id"`
 }
 
 type CreateAccountResponse struct {

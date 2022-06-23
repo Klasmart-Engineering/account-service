@@ -4,14 +4,15 @@ import (
 	"database/sql"
 	db "kidsloop/account-service/database"
 	"kidsloop/account-service/model"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 // CreateAccount ... Create Account
 // @Summary  Create a new account
-// @Success  200      {object}  model.CreateAccountResponse
-// @Failure  400,500  {object}  model.APIError
+// @Success  200  {object}  model.CreateAccountResponse
+// @Failure  500  {object}  model.ErrorResponse
 // @Router   /accounts [post]
 func CreateAccount(c *gin.Context) {
 	response, err := db.RunInTransaction(c, func(tx *sql.Tx) (*model.CreateAccountResponse, error) {
@@ -38,41 +39,59 @@ func CreateAccount(c *gin.Context) {
 	})
 
 	if err != nil {
-		c.String(500, err.Error())
+		c.Error(err)
 	} else {
-		c.JSON(200, response)
+		c.JSON(http.StatusOK, response)
 	}
 }
 
 // GetAccount ... Get Account
 // @Summary  Get details of an account
-// @Param    id  path      string  true  "Account ID"
-// @Success  200        {object}  model.Account
-// @Failure  400,500    {object}  model.APIError
+// @Param    id           path      string  true  "Account ID"
+// @Success  200          {object}  model.Account
+// @Failure  400,404,500  {object}  model.ErrorResponse
 // @Router   /accounts/{id} [get]
 func GetAccount(c *gin.Context) {
+	type Uri struct {
+		ID string `uri:"id" binding:"required,uuid"`
+	}
+	var uri Uri
+	if err := c.ShouldBindUri(&uri); err != nil {
+		c.Error(err)
+		return
+	}
+
 	id := c.Param("id")
 	account, err := db.Database.GetAccount(nil, id)
+
 	if err != nil {
-		c.String(500, err.Error())
+		c.Error(err)
 	} else {
-		c.JSON(200, account)
+		c.JSON(http.StatusOK, account)
 	}
 }
 
 // DeleteAccount ... Delete Account
 // @Summary  Delete an account
-// @Param    id  path     string  true  "Account ID"
-// @Success  200        {object}  model.Account
-// @Failure  400,500    {object}  model.APIError
+// @Param    id           path      string  true  "Account ID"
+// @Success  200          {object}  model.Account
+// @Failure  400,404,500  {object}  model.ErrorResponse
 // @Router   /accounts/{id} [delete]
 func DeleteAccount(c *gin.Context) {
+	type Uri struct {
+		ID string `uri:"id" binding:"required,uuid"`
+	}
+	var uri Uri
+	if err := c.ShouldBindUri(&uri); err != nil {
+		c.Error(err)
+		return
+	}
+
 	id := c.Param("id")
 	err := db.Database.DeleteAccount(nil, id)
 	if err != nil {
-		c.String(500, err.Error())
+		c.Error(err)
 	} else {
-		c.String(200, "Success")
-
+		c.String(http.StatusOK, "Success")
 	}
 }

@@ -26,16 +26,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/model.CreateAccountResponse"
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/model.APIError"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/model.APIError"
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     }
                 }
@@ -63,13 +57,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/model.APIError"
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/model.APIError"
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     }
                 }
@@ -95,13 +95,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/model.APIError"
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/model.APIError"
+                            "$ref": "#/definitions/model.ErrorResponse"
                         }
                     }
                 }
@@ -109,15 +115,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "model.APIError": {
+        "api_errors.APIErrorResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "string"
                 },
-                "details": {},
+                "error": {
+                    "type": "string"
+                },
                 "message": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         },
@@ -159,6 +170,17 @@ const docTemplate = `{
                 },
                 "android_group": {
                     "$ref": "#/definitions/model.AndroidGroup"
+                }
+            }
+        },
+        "model.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api_errors.APIErrorResponse"
+                    }
                 }
             }
         }

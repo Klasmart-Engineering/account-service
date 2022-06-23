@@ -1,11 +1,14 @@
 definitions:
-  model.APIError:
+  api_errors.APIErrorResponse:
     properties:
       code:
         type: string
-      details: {}
+      error:
+        type: string
       message:
         type: string
+      status:
+        type: integer
     type: object
   model.Account:
     properties:
@@ -33,6 +36,13 @@ definitions:
       android_group:
         $ref: '#/definitions/model.AndroidGroup'
     type: object
+  model.ErrorResponse:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/api_errors.APIErrorResponse'
+        type: array
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -46,14 +56,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.CreateAccountResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/model.APIError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.APIError'
+            $ref: '#/definitions/model.ErrorResponse'
       summary: Create a new account
   /accounts/{id}:
     delete:
@@ -71,11 +77,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.APIError'
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.APIError'
+            $ref: '#/definitions/model.ErrorResponse'
       summary: Delete an account
     get:
       parameters:
@@ -92,10 +102,14 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/model.APIError'
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/model.APIError'
+            $ref: '#/definitions/model.ErrorResponse'
       summary: Get details of an account
 swagger: "2.0"

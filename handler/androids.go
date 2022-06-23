@@ -44,7 +44,6 @@ func CreateAndroid(c *gin.Context) {
 				Status:  http.StatusNotFound,
 				Code:    api_errors.ErrCodeNotFound,
 				Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", uri.AndroidGroupID),
-				Err:     err,
 			}
 		}
 

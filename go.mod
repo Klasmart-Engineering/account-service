@@ -30,11 +30,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
-<<<<<<< HEAD
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/joho/godotenv v1.4.0 // indirect
-=======
->>>>>>> 84324b8 (feat(AS-26): New Relic monitoring agent)
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

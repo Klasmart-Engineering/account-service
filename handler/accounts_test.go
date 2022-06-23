@@ -35,19 +35,21 @@ func TestMain(m *testing.M) {
 }
 
 func TestCreateAccount(t *testing.T) {
-	request, _ := http.NewRequest("PUT", "/accounts", nil)
+	request, _ := http.NewRequest("POST", "/accounts", nil)
 	response := httptest.NewRecorder()
 	router.ServeHTTP(response, request)
 
-	var data model.Account
+	var data model.CreateAccountResponse
 	_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
 
 	assert.Equal(t, 200, response.Code)
-	assert.NotEqual(t, "", data.ID)
+	assert.NotEqual(t, "", data.Account.ID)
+	assert.NotEqual(t, "", data.Android.ID)
+	assert.NotEqual(t, "", data.AndroidGroup.ID)
 }
 
 func TestGetAccount(t *testing.T) {
-	account, _ := db.Database.CreateAccount()
+	account, _ := db.Database.CreateAccount(nil)
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("GET", url, nil)
@@ -62,7 +64,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	account, _ := db.Database.CreateAccount()
+	account, _ := db.Database.CreateAccount(nil)
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("DELETE", url, nil)

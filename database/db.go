@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -39,4 +40,25 @@ func InitDB() error {
 	Database.Conn = connection
 
 	return nil
+}
+
+func RunInTransaction[T any](ctx context.Context, handler func(tx *sql.Tx) (T, error)) (T, error) {
+	var result T
+
+	tx, err := Database.Conn.BeginTx(ctx, nil)
+	if err != nil {
+		return result, err
+	}
+	defer tx.Rollback()
+
+	result, err = handler(tx)
+	if err != nil {
+		return result, err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return result, err
+	}
+
+	return result, nil
 }

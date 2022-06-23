@@ -11,7 +11,7 @@ func SetUpRouter() *gin.Engine {
 	r.GET("/", HealthCheck)
 
 	r.GET("/accounts/:id", GetAccount)
-	r.PUT("/accounts", CreateAccount)
+	r.POST("/accounts", CreateAccount)
 	r.DELETE("/accounts/:id", DeleteAccount)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

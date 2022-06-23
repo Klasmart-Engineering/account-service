@@ -12,6 +12,27 @@ definitions:
       id:
         type: string
     type: object
+  model.Android:
+    properties:
+      android_group_id:
+        type: string
+      id:
+        type: string
+    type: object
+  model.AndroidGroup:
+    properties:
+      id:
+        type: string
+    type: object
+  model.CreateAccountResponse:
+    properties:
+      account:
+        $ref: '#/definitions/model.Account'
+      android:
+        $ref: '#/definitions/model.Android'
+      android_group:
+        $ref: '#/definitions/model.AndroidGroup'
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -19,12 +40,12 @@ info:
   version: 0.0.1
 paths:
   /accounts:
-    put:
+    post:
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Account'
+            $ref: '#/definitions/model.CreateAccountResponse'
         "400":
           description: Bad Request
           schema:
@@ -38,7 +59,7 @@ paths:
     delete:
       parameters:
       - description: Account ID
-        in: query
+        in: path
         name: id
         required: true
         type: string

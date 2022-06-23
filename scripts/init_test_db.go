@@ -40,7 +40,11 @@ func main() {
 
 	for _, sqlMigration := range sqlMigrations {
 		fmt.Println(sqlMigration)
-		db.Database.Conn.Exec(sqlMigration)
+		_, err := db.Database.Conn.Exec(sqlMigration)
+		if err != nil {
+			log.Fatal(err)
+		}
+
 	}
 
 	fmt.Println("Database initialization complete")

@@ -25,12 +25,16 @@ func (r *APIError) Error() string {
 }
 
 func (e *APIError) ErrorResponse() *APIErrorResponse {
-	return &APIErrorResponse{
+	response := &APIErrorResponse{
 		Status:  e.Status,
 		Code:    e.Code,
 		Message: e.Message,
-		Err:     e.Err.Error(),
 	}
+
+	if e.Err != nil {
+		response.Err = e.Err.Error()
+	}
+	return response
 }
 
 const (

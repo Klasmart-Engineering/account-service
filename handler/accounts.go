@@ -63,8 +63,7 @@ func GetAccount(c *gin.Context) {
 		return
 	}
 
-	id := c.Param("id")
-	account, err := db.Database.GetAccount(nil, id)
+	account, err := db.Database.GetAccount(nil, uri.ID)
 
 	if err != nil {
 		c.Error(err)
@@ -90,8 +89,7 @@ func DeleteAccount(c *gin.Context) {
 		return
 	}
 
-	id := c.Param("id")
-	err := db.Database.DeleteAccount(nil, id)
+	err := db.Database.DeleteAccount(nil, uri.ID)
 	if err != nil {
 		c.Error(err)
 	} else {

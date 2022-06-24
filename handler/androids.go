@@ -8,7 +8,8 @@ import (
 )
 
 // CreateAndroid ... Create Android
-// @Summary  Create a new account
+// @Summary  Create a new android in the specified android group
+// @Tags     androids
 // @Param    id       path      string  true  "Android Group ID"
 // @Success  200      {object}  model.Android
 // @Failure  404,500  {object}  model.ErrorResponse

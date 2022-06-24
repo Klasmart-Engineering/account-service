@@ -124,7 +124,10 @@ const docTemplate = `{
         },
         "/android_groups/{id}/androids": {
             "post": {
-                "summary": "Create a new account",
+                "tags": [
+                    "androids"
+                ],
+                "summary": "Create a new android in the specified android group",
                 "parameters": [
                     {
                         "type": "string",

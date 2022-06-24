@@ -6,18 +6,15 @@ import (
 	"fmt"
 	api_errors "kidsloop/account-service/errors"
 	"kidsloop/account-service/model"
-	"kidsloop/account-service/monitoring"
 	"net/http"
 
 	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
-func (db DB) CreateAccount(tx *sql.Tx) (model.Account, error) {
+func (db DB) CreateAccount(tx *sql.Tx, nrTxn *newrelic.Transaction) (model.Account, error) {
 	query := `INSERT INTO account DEFAULT VALUES RETURNING id`
 	account := model.Account{}
 
-	nrTxn := monitoring.NrApp.StartTransaction("createAccount")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error
@@ -30,12 +27,10 @@ func (db DB) CreateAccount(tx *sql.Tx) (model.Account, error) {
 	return account, err
 }
 
-func (db DB) GetAccount(tx *sql.Tx, id string) (model.Account, error) {
+func (db DB) GetAccount(tx *sql.Tx, id string, nrTxn *newrelic.Transaction) (model.Account, error) {
 	query := `SELECT id FROM account WHERE id = $1 LIMIT 1`
 	account := model.Account{}
 
-	nrTxn := monitoring.NrApp.StartTransaction("getAccount")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error
@@ -57,12 +52,10 @@ func (db DB) GetAccount(tx *sql.Tx, id string) (model.Account, error) {
 	return account, err
 }
 
-func (db DB) DeleteAccount(tx *sql.Tx, id string) error {
+func (db DB) DeleteAccount(tx *sql.Tx, id string, nrTxn *newrelic.Transaction) error {
 	query := `DELETE FROM account WHERE id = $1 RETURNING id`
 	var accountId string
 
-	nrTxn := monitoring.NrApp.StartTransaction("deleteAccount")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error

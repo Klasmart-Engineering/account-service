@@ -7,18 +7,15 @@ import (
 	"fmt"
 	api_errors "kidsloop/account-service/errors"
 	"kidsloop/account-service/model"
-	"kidsloop/account-service/monitoring"
 	"net/http"
 
 	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
-func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string) (model.Android, error) {
+func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string, nrTxn *newrelic.Transaction) (model.Android, error) {
 	query := `INSERT INTO android (android_group_id) VALUES ($1) RETURNING id, android_group_id`
 	android := model.Android{}
 
-	nrTxn := monitoring.NrApp.StartTransaction("createAndroid")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error
@@ -31,12 +28,10 @@ func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string) 
 	return android, err
 }
 
-func (db DB) GetAndroid(tx *sql.Tx, id string) (model.Android, error) {
+func (db DB) GetAndroid(tx *sql.Tx, id string, nrTxn *newrelic.Transaction) (model.Android, error) {
 	query := `SELECT id, android_group_id FROM android WHERE id = $1 LIMIT 1`
 	android := model.Android{}
 
-	nrTxn := monitoring.NrApp.StartTransaction("getAndroid")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error
@@ -58,12 +53,10 @@ func (db DB) GetAndroid(tx *sql.Tx, id string) (model.Android, error) {
 	return android, err
 }
 
-func (db DB) DeleteAndroid(tx *sql.Tx, id string) error {
+func (db DB) DeleteAndroid(tx *sql.Tx, id string, nrTxn *newrelic.Transaction) error {
 	query := `DELETE FROM android WHERE id = $1 RETURNING id`
 	var androidId string
 
-	nrTxn := monitoring.NrApp.StartTransaction("deleteAndroid")
-	defer nrTxn.End()
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	var err error

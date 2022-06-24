@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
 )
 
 // CreateAccount ... Create Account
@@ -17,17 +18,20 @@ import (
 // @Router   /accounts [post]
 func CreateAccount(c *gin.Context) {
 	response, err := db.RunInTransaction(c, func(tx *sql.Tx) (*model.CreateAccountResponse, error) {
-		account, err := db.Database.CreateAccount(tx)
+		nrTxn := nrgin.Transaction(c)
+		defer nrTxn.End()
+
+		account, err := db.Database.CreateAccount(tx, nrTxn)
 		if err != nil {
 			return nil, err
 		}
 
-		androidGroup, err := db.Database.CreateAndroidGroup(tx, account.ID)
+		androidGroup, err := db.Database.CreateAndroidGroup(tx, account.ID, nrTxn)
 		if err != nil {
 			return nil, err
 		}
 
-		android, err := db.Database.CreateAndroid(tx, account.ID, androidGroup.ID)
+		android, err := db.Database.CreateAndroid(tx, account.ID, androidGroup.ID, nrTxn)
 		if err != nil {
 			return nil, err
 		}
@@ -63,8 +67,11 @@ func GetAccount(c *gin.Context) {
 		return
 	}
 
+	nrTxn := nrgin.Transaction(c)
+	defer nrTxn.End()
+
 	id := c.Param("id")
-	account, err := db.Database.GetAccount(nil, id)
+	account, err := db.Database.GetAccount(nil, id, nrTxn)
 
 	if err != nil {
 		c.Error(err)
@@ -90,8 +97,11 @@ func DeleteAccount(c *gin.Context) {
 		return
 	}
 
+	nrTxn := nrgin.Transaction(c)
+	defer nrTxn.End()
+
 	id := c.Param("id")
-	err := db.Database.DeleteAccount(nil, id)
+	err := db.Database.DeleteAccount(nil, id, nrTxn)
 	if err != nil {
 		c.Error(err)
 	} else {

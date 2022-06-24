@@ -27,7 +27,7 @@ func CreateAccount(c *gin.Context) {
 			return nil, err
 		}
 
-		android, err := db.Database.CreateAndroid(tx, account.ID, androidGroup.ID)
+		android, err := db.Database.CreateAndroid(tx, androidGroup.ID)
 		if err != nil {
 			return nil, err
 		}

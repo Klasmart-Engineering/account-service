@@ -121,6 +121,40 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/android_groups/{id}/androids": {
+            "post": {
+                "summary": "Create a new account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Android Group ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Android"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -163,6 +197,9 @@ const docTemplate = `{
         "model.AndroidGroup": {
             "type": "object",
             "properties": {
+                "account_id": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 }

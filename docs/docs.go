@@ -84,7 +84,7 @@ const docTemplate = `{
                 "tags": [
                     "accounts"
                 ],
-                "summary": "Delete an account",
+                "summary": "Deletes an account and all associated android groups and androids",
                 "parameters": [
                     {
                         "type": "string",

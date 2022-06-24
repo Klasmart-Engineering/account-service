@@ -12,7 +12,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=kidsloop
       - POSTGRES_DB=account_service
-      - NEW_RELIC_LICENSE_KEY=new-relic-license-key-placeholder
     depends_on:
       postgres:
         condition: service_healthy

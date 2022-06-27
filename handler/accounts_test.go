@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	db "kidsloop/account-service/database"
@@ -50,18 +51,18 @@ func TestCreateAccount200(t *testing.T) {
 	assert.True(t, test_util.IsValidUUID(data.AndroidGroup.ID))
 	assert.Equal(t, data.AndroidGroup.ID, data.Android.AndroidGroupID)
 
-	account, err := db.Database.GetAccount(nil, data.Account.ID)
+	account, err := db.Database.GetAccount(nil, context.Background(), data.Account.ID)
 	assert.Nil(t, err)
 	assert.Equal(t, account.ID, data.Account.ID)
 
-	android, err := db.Database.GetAndroid(nil, data.Android.ID)
+	android, err := db.Database.GetAndroid(nil, context.Background(), data.Android.ID)
 	assert.Nil(t, err)
 	assert.Equal(t, android.ID, data.Android.ID)
 	assert.Equal(t, android.AndroidGroupID, data.AndroidGroup.ID)
 }
 
 func TestGetAccount200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
+	account, _ := db.Database.CreateAccount(nil, context.Background())
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("GET", url, nil)
@@ -111,7 +112,7 @@ func TestGetAccount404(t *testing.T) {
 }
 
 func TestDeleteAccount200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
+	account, _ := db.Database.CreateAccount(nil, context.Background())
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("DELETE", url, nil)

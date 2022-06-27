@@ -70,3 +70,27 @@ func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
 	assert.Equal(t, 1, len(data))
 	assert.Equal(t, android.ID, data[0].ID)
 }
+
+func TestGetPaginatedAndroidsByGroup200Pages(t *testing.T) {
+	account, _ := db.Database.CreateAccount(nil)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, account.ID)
+
+	for i := 0; i < 10; i++ {
+		_, _ = db.Database.CreateAndroid(nil, androidGroup.ID)
+	}
+
+	firstPage := fmt.Sprintf("/android_groups/%s/androids?limit=5", androidGroup.ID)
+	secondPage := fmt.Sprintf("/android_groups/%s/androids?offset=5", androidGroup.ID)
+
+	for _, url := range []string{firstPage, secondPage} {
+		request, _ := http.NewRequest("GET", url, nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+
+		var data []model.Android
+		_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
+
+		assert.Equal(t, 200, response.Code)
+		assert.Equal(t, 5, len(data))
+	}
+}

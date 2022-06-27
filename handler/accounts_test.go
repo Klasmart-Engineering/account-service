@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	db "kidsloop/account-service/database"
@@ -61,7 +62,7 @@ func TestCreateAccount200(t *testing.T) {
 }
 
 func TestGetAccount200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
+	account, _ := db.Database.CreateAccount(nil, context.Background())
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("GET", url, nil)
@@ -111,7 +112,7 @@ func TestGetAccount404(t *testing.T) {
 }
 
 func TestDeleteAccount200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
+	account, _ := db.Database.CreateAccount(nil, context.Background())
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("DELETE", url, nil)

@@ -58,7 +58,7 @@ func GetPaginatedAndroidsByGroup(c *gin.Context) {
 		return
 	}
 
-	androids, err := db.Database.GetPaginatedAndroidsByGroup(nil, uri.ID, args.Offset, args.Limit)
+	androids, err := db.Database.GetAndroidsByGroup(nil, uri.ID, args.Offset, args.Limit)
 
 	if err != nil {
 		c.Error(err)

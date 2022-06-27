@@ -92,7 +92,7 @@ func (db DB) DeleteAndroid(tx *sql.Tx, id string) error {
 }
 
 func (db DB) GetPaginatedAndroidsByGroup(tx *sql.Tx, groupId string, offset int, pageSize int) ([]model.Android, error) {
-	query := `SELECT id FROM android WHERE android_group_id = $1 OFFSET $2 LIMIT $3`
+	query := `SELECT id, android_group_id FROM android WHERE android_group_id = $1 OFFSET $2 LIMIT $3`
 	androids := []model.Android{}
 
 	limit := pageSize
@@ -106,7 +106,7 @@ func (db DB) GetPaginatedAndroidsByGroup(tx *sql.Tx, groupId string, offset int,
 	}
 	for rows.Next() {
 		var android model.Android
-		err := rows.Scan(&android.ID)
+		err := rows.Scan(&android.ID, &android.AndroidGroupID)
 		if err != nil {
 			return androids, err
 		}

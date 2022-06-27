@@ -1,6 +1,7 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	api_errors "kidsloop/account-service/errors"
@@ -8,29 +9,29 @@ import (
 	"net/http"
 )
 
-func (db DB) CreateAndroidGroup(tx *sql.Tx, accountID string) (model.AndroidGroup, error) {
+func (db DB) CreateAndroidGroup(tx *sql.Tx, ctx context.Context, accountID string) (model.AndroidGroup, error) {
 	query := `INSERT INTO android_group (account_id) VALUES ($1) RETURNING id`
 	androidGroup := model.AndroidGroup{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRow(query, accountID).Scan(&androidGroup.ID)
+		err = tx.QueryRowContext(ctx, query, accountID).Scan(&androidGroup.ID)
 	} else {
-		err = db.Conn.QueryRow(query, accountID).Scan(&androidGroup.ID)
+		err = db.Conn.QueryRowContext(ctx, query, accountID).Scan(&androidGroup.ID)
 	}
 
 	return androidGroup, err
 }
 
-func (db DB) GetAndroidGroup(tx *sql.Tx, id string) (model.AndroidGroup, error) {
+func (db DB) GetAndroidGroup(tx *sql.Tx, ctx context.Context, id string) (model.AndroidGroup, error) {
 	query := `SELECT id, account_id FROM android_group WHERE id = $1 LIMIT 1`
 	androidGroup := model.AndroidGroup{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRow(query, id).Scan(&androidGroup.ID, &androidGroup.ID)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&androidGroup.ID, &androidGroup.ID)
 	} else {
-		err = db.Conn.QueryRow(query, id).Scan(&androidGroup.ID, &androidGroup.AccountID)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&androidGroup.ID, &androidGroup.AccountID)
 	}
 
 	if err == sql.ErrNoRows {

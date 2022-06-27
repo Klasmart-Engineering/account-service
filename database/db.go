@@ -7,7 +7,7 @@ import (
 
 	util "kidsloop/account-service/util"
 
-	_ "github.com/lib/pq"
+	_ "github.com/newrelic/go-agent/v3/integrations/nrpq"
 )
 
 type DB struct {
@@ -26,7 +26,7 @@ func InitDB() error {
 		util.GetEnvOrPanic("POSTGRES_DB"),
 	)
 
-	connection, err := sql.Open("postgres", connStr)
+	connection, err := sql.Open("nrpostgres", connStr)
 	if err != nil {
 		return err
 	}

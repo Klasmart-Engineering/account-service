@@ -56,9 +56,10 @@ func TestCreateAndroid404(t *testing.T) {
 }
 
 func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
-	androidGroup, _ := db.Database.CreateAndroidGroup(nil, account.ID)
-	android, _ := db.Database.CreateAndroid(nil, androidGroup.ID)
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
+	android, _ := db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
 
 	url := fmt.Sprintf("/android_groups/%s/androids", androidGroup.ID)
 	request, _ := http.NewRequest("GET", url, nil)
@@ -74,11 +75,12 @@ func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
 }
 
 func TestGetPaginatedAndroidsByGroup200Pages(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil)
-	androidGroup, _ := db.Database.CreateAndroidGroup(nil, account.ID)
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
 
 	for i := 0; i < 10; i++ {
-		_, _ = db.Database.CreateAndroid(nil, androidGroup.ID)
+		_, _ = db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
 	}
 
 	firstPage := fmt.Sprintf("/android_groups/%s/androids?limit=5", androidGroup.ID)

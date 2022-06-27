@@ -17,8 +17,9 @@ import (
 )
 
 func TestCreateAndroid200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil, context.Background())
-	androidGroup, _ := db.Database.CreateAndroidGroup(nil, context.Background(), account.ID)
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
 
 	url := fmt.Sprintf("/android_groups/%s/androids", androidGroup.ID)
 	request, _ := http.NewRequest("POST", url, nil)
@@ -32,7 +33,7 @@ func TestCreateAndroid200(t *testing.T) {
 	assert.True(t, test_util.IsValidUUID(data.ID))
 	assert.Equal(t, androidGroup.ID, data.AndroidGroupID)
 
-	android, err := db.Database.GetAndroid(nil, context.Background(), data.ID)
+	android, err := db.Database.GetAndroid(nil, ctx, data.ID)
 	assert.Nil(t, err)
 	assert.Equal(t, android.ID, data.ID)
 }

@@ -26,7 +26,6 @@ func CreateAndroid(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-
 	nrTxn := nrgin.Transaction(c)
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 

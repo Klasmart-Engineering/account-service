@@ -1,37 +1,37 @@
 package db
 
 import (
+	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	api_errors "kidsloop/account-service/errors"
 	"kidsloop/account-service/model"
 	"net/http"
 )
 
-func (db DB) CreateAccount(tx *sql.Tx) (model.Account, error) {
+func (db DB) CreateAccount(tx *sql.Tx, ctx context.Context) (model.Account, error) {
 	query := `INSERT INTO account DEFAULT VALUES RETURNING id`
 	account := model.Account{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRow(query).Scan(&account.ID)
+		err = tx.QueryRowContext(ctx, query).Scan(&account.ID)
 	} else {
-		err = db.Conn.QueryRow(query).Scan(&account.ID)
+		err = db.Conn.QueryRowContext(ctx, query).Scan(&account.ID)
 	}
 
 	return account, err
 }
 
-func (db DB) GetAccount(tx *sql.Tx, id string) (model.Account, error) {
+func (db DB) GetAccount(tx *sql.Tx, ctx context.Context, id string) (model.Account, error) {
 	query := `SELECT id FROM account WHERE id = $1 LIMIT 1`
 	account := model.Account{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRow(query, id).Scan(&account.ID)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&account.ID)
 	} else {
-		err = db.Conn.QueryRow(query, id).Scan(&account.ID)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&account.ID)
 	}
 
 	if err == sql.ErrNoRows {
@@ -46,28 +46,23 @@ func (db DB) GetAccount(tx *sql.Tx, id string) (model.Account, error) {
 	return account, err
 }
 
-func (db DB) DeleteAccount(tx *sql.Tx, id string) error {
-	query := `DELETE FROM account WHERE id = $1`
+func (db DB) DeleteAccount(tx *sql.Tx, ctx context.Context, id string) error {
+	query := `DELETE FROM account WHERE id = $1 RETURNING id`
+	var accountId string
 
-	var result sql.Result
 	var err error
 	if tx != nil {
-		result, err = tx.Exec(query, id)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&accountId)
 	} else {
-		result, err = db.Conn.Exec(query, id)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&accountId)
 	}
 
-	if err != nil {
-		return err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err == nil && rowsAffected == 0 {
+	if err == sql.ErrNoRows {
 		return &api_errors.APIError{
 			Status:  http.StatusNotFound,
 			Code:    api_errors.ErrCodeNotFound,
 			Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "account", id),
-			Err:     errors.New("no rows affected"),
+			Err:     err,
 		}
 	}
 

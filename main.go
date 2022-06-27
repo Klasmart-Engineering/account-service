@@ -4,10 +4,12 @@ import (
 	db "kidsloop/account-service/database"
 	_ "kidsloop/account-service/docs"
 	"kidsloop/account-service/handler"
-	_ "kidsloop/account-service/util"
+	"kidsloop/account-service/monitoring"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
+	nrgin "github.com/newrelic/go-agent/v3/integrations/nrgin"
 )
 
 // @title    account-service documentation
@@ -27,10 +29,16 @@ func main() {
 		log.Println("Failed to connect to postgres:")
 		log.Fatal(err)
 	}
-
 	log.Println("Connected to Postgres")
 
 	router := handler.SetUpRouter()
+
+	// Create New Relic agent ("Application"), if NR license key exists
+	if nrKey := os.Getenv("NEW_RELIC_LICENSE_KEY"); nrKey != "" {
+		monitoring.SetupNewRelic("account-service", nrKey)
+		router.Use(nrgin.Middleware(monitoring.NrApp)) // Instrument web framework
+	}
+
 	router.Run()
 
 	log.Println("Started router")

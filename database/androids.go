@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string, ctx context.Context) (model.Android, error) {
+func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, accountID string, androidGroupId string) (model.Android, error) {
 	query := `INSERT INTO android (android_group_id) VALUES ($1) RETURNING id, android_group_id`
 	android := model.Android{}
 
@@ -24,7 +24,7 @@ func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string, 
 	return android, err
 }
 
-func (db DB) GetAndroid(tx *sql.Tx, id string, ctx context.Context) (model.Android, error) {
+func (db DB) GetAndroid(tx *sql.Tx, ctx context.Context, id string) (model.Android, error) {
 	query := `SELECT id, android_group_id FROM android WHERE id = $1 LIMIT 1`
 	android := model.Android{}
 
@@ -47,7 +47,7 @@ func (db DB) GetAndroid(tx *sql.Tx, id string, ctx context.Context) (model.Andro
 	return android, err
 }
 
-func (db DB) DeleteAndroid(tx *sql.Tx, id string, ctx context.Context) error {
+func (db DB) DeleteAndroid(tx *sql.Tx, ctx context.Context, id string) error {
 	query := `DELETE FROM android WHERE id = $1 RETURNING id`
 	var androidId string
 

@@ -23,7 +23,7 @@ func (db DB) CreateAccount(tx *sql.Tx, ctx context.Context) (model.Account, erro
 	return account, err
 }
 
-func (db DB) GetAccount(tx *sql.Tx, id string, ctx context.Context) (model.Account, error) {
+func (db DB) GetAccount(tx *sql.Tx, ctx context.Context, id string) (model.Account, error) {
 	query := `SELECT id FROM account WHERE id = $1 LIMIT 1`
 	account := model.Account{}
 
@@ -46,7 +46,7 @@ func (db DB) GetAccount(tx *sql.Tx, id string, ctx context.Context) (model.Accou
 	return account, err
 }
 
-func (db DB) DeleteAccount(tx *sql.Tx, id string, ctx context.Context) error {
+func (db DB) DeleteAccount(tx *sql.Tx, ctx context.Context, id string) error {
 	query := `DELETE FROM account WHERE id = $1 RETURNING id`
 	var accountId string
 

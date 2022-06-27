@@ -6,7 +6,7 @@ import (
 	"kidsloop/account-service/model"
 )
 
-func (db DB) CreateAndroidGroup(tx *sql.Tx, accountID string, ctx context.Context) (model.AndroidGroup, error) {
+func (db DB) CreateAndroidGroup(tx *sql.Tx, ctx context.Context, accountID string) (model.AndroidGroup, error) {
 	query := `INSERT INTO android_group (account_id) VALUES ($1) RETURNING id`
 	androidGroup := model.AndroidGroup{}
 

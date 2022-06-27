@@ -10,29 +10,29 @@ import (
 	"net/http"
 )
 
-func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string, nrCtx context.Context) (model.Android, error) {
+func (db DB) CreateAndroid(tx *sql.Tx, accountID string, androidGroupId string, ctx context.Context) (model.Android, error) {
 	query := `INSERT INTO android (android_group_id) VALUES ($1) RETURNING id, android_group_id`
 	android := model.Android{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRowContext(nrCtx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
+		err = tx.QueryRowContext(ctx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
 	} else {
-		err = db.Conn.QueryRowContext(nrCtx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
+		err = db.Conn.QueryRowContext(ctx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
 	}
 
 	return android, err
 }
 
-func (db DB) GetAndroid(tx *sql.Tx, id string, nrCtx context.Context) (model.Android, error) {
+func (db DB) GetAndroid(tx *sql.Tx, id string, ctx context.Context) (model.Android, error) {
 	query := `SELECT id, android_group_id FROM android WHERE id = $1 LIMIT 1`
 	android := model.Android{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRowContext(nrCtx, query, id).Scan(&android.ID, &android.AndroidGroupID)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&android.ID, &android.AndroidGroupID)
 	} else {
-		err = db.Conn.QueryRowContext(nrCtx, query, id).Scan(&android.ID, &android.AndroidGroupID)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&android.ID, &android.AndroidGroupID)
 	}
 
 	if err == sql.ErrNoRows {
@@ -47,15 +47,15 @@ func (db DB) GetAndroid(tx *sql.Tx, id string, nrCtx context.Context) (model.And
 	return android, err
 }
 
-func (db DB) DeleteAndroid(tx *sql.Tx, id string, nrCtx context.Context) error {
+func (db DB) DeleteAndroid(tx *sql.Tx, id string, ctx context.Context) error {
 	query := `DELETE FROM android WHERE id = $1 RETURNING id`
 	var androidId string
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRowContext(nrCtx, query, id).Scan(&androidId)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&androidId)
 	} else {
-		err = db.Conn.QueryRowContext(nrCtx, query, id).Scan(&androidId)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&androidId)
 	}
 
 	if err == sql.ErrNoRows {

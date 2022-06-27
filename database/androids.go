@@ -12,7 +12,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, accountID string, androidGroupId string) (model.Android, error) {
+func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, androidGroupId string) (model.Android, error) {
 	query := `INSERT INTO android (android_group_id) VALUES ($1) RETURNING id, android_group_id`
 	android := model.Android{}
 

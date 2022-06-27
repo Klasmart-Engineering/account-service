@@ -1,10 +1,13 @@
 package handler
 
 import (
+	"context"
 	db "kidsloop/account-service/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 // CreateAndroid ... Create Android
@@ -23,8 +26,10 @@ func CreateAndroid(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+	nrTxn := nrgin.Transaction(c)
+	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-	android, err := db.Database.CreateAndroid(nil, uri.ID)
+	android, err := db.Database.CreateAndroid(nil, nrCtx, uri.ID)
 
 	if err != nil {
 		c.Error(err)

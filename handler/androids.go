@@ -13,7 +13,7 @@ import (
 // GetAndroid ... Get Android
 // @Summary  Get details of an android
 // @Tags     androids
-// @Param    id           path      string  true  "Account ID"
+// @Param    id           path      string  true  "Android ID"
 // @Success  200          {object}  model.Android
 // @Failure  400,404,500  {object}  model.ErrorResponse
 // @Router   /androids/{id} [get]

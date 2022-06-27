@@ -20,6 +20,7 @@ func SetUpRouter() *gin.Engine {
 	r.DELETE("/accounts/:id", DeleteAccount)
 
 	r.POST("/android_groups/:id/androids", CreateAndroid)
+	r.GET("/android_groups/:id/androids", GetPaginatedAndroidsByGroup)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r

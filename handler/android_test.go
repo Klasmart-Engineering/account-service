@@ -52,3 +52,21 @@ func TestCreateAndroid404(t *testing.T) {
 	assert.Equal(t, err.Code, api_errors.ErrCodeNotFound)
 	assert.Equal(t, err.Message, fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", wrongUUID))
 }
+
+func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
+	account, _ := db.Database.CreateAccount(nil)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, account.ID)
+	android, _ := db.Database.CreateAndroid(nil, androidGroup.ID)
+
+	url := fmt.Sprintf("/android_groups/%s/androids", androidGroup.ID)
+	request, _ := http.NewRequest("GET", url, nil)
+	response := httptest.NewRecorder()
+	router.ServeHTTP(response, request)
+
+	var data []model.Android
+	_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
+
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, 1, len(data))
+	assert.Equal(t, android.ID, data[0].ID)
+}

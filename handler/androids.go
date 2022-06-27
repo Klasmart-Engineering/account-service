@@ -2,6 +2,7 @@ package handler
 
 import (
 	db "kidsloop/account-service/database"
+	"kidsloop/account-service/util"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,5 +31,30 @@ func CreateAndroid(c *gin.Context) {
 		c.Error(err)
 	} else {
 		c.JSON(http.StatusOK, android)
+	}
+}
+
+func GetPaginatedAndroidsByGroup(c *gin.Context) {
+	type Uri struct {
+		ID string `uri:"id" binding:"required,uuid"`
+	}
+	var uri Uri
+	if err := c.ShouldBindUri(&uri); err != nil {
+		c.Error(err)
+		return
+	}
+
+	var args util.OffsetPaginationArgs
+	if err := c.ShouldBindQuery(&args); err != nil {
+		c.Error(err)
+		return
+	}
+
+	androids, err := db.Database.GetPaginatedAndroidsByGroup(nil, uri.ID, args.Offset, args.Limit)
+
+	if err != nil {
+		c.Error(err)
+	} else {
+		c.JSON(http.StatusOK, androids)
 	}
 }

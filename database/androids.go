@@ -6,6 +6,7 @@ import (
 	"fmt"
 	api_errors "kidsloop/account-service/errors"
 	"kidsloop/account-service/model"
+	"kidsloop/account-service/util"
 	"net/http"
 
 	"github.com/lib/pq"
@@ -88,4 +89,29 @@ func (db DB) DeleteAndroid(tx *sql.Tx, id string) error {
 	}
 
 	return err
+}
+
+func (db DB) GetPaginatedAndroidsByGroup(tx *sql.Tx, groupId string, offset int, pageSize int) ([]model.Android, error) {
+	query := `SELECT id FROM android WHERE android_group_id = $1 OFFSET $2 LIMIT $3`
+	androids := []model.Android{}
+
+	limit := pageSize
+	if limit == 0 {
+		limit = util.DefaultPageSize
+	}
+
+	rows, err := db.Conn.Query(query, groupId, offset, limit)
+	if err != nil {
+		return androids, err
+	}
+	for rows.Next() {
+		var android model.Android
+		err := rows.Scan(&android.ID)
+		if err != nil {
+			return androids, err
+		}
+		androids = append(androids, android)
+	}
+
+	return androids, err
 }

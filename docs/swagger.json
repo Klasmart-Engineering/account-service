@@ -114,6 +114,59 @@
             }
         },
         "/android_groups/{id}/androids": {
+            "get": {
+                "tags": [
+                    "androids"
+                ],
+                "summary": "Returns a paginated list of androids in the specified android group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Android Group ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "maximum": 25,
+                        "minimum": 1,
+                        "type": "integer",
+                        "default": 10,
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "default": 0,
+                        "name": "offset",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Android"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "androids"

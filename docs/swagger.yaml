@@ -122,6 +122,42 @@ paths:
       tags:
       - accounts
   /android_groups/{id}/androids:
+    get:
+      parameters:
+      - description: Android Group ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: 10
+        in: query
+        maximum: 25
+        minimum: 1
+        name: limit
+        type: integer
+      - default: 0
+        in: query
+        minimum: 0
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Android'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Returns a paginated list of androids in the specified android group
+      tags:
+      - androids
     post:
       parameters:
       - description: Android Group ID

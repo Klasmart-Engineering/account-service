@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"database/sql"
 	db "kidsloop/account-service/database"
 	"kidsloop/account-service/model"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/newrelic/go-agent/v3/integrations/nrgin"
+	"github.com/newrelic/go-agent/v3/newrelic"
 )
 
 // CreateAccount ... Create Account
@@ -19,19 +21,19 @@ import (
 func CreateAccount(c *gin.Context) {
 	response, err := db.RunInTransaction(c, func(tx *sql.Tx) (*model.CreateAccountResponse, error) {
 		nrTxn := nrgin.Transaction(c)
-		defer nrTxn.End()
+		nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-		account, err := db.Database.CreateAccount(tx, nrTxn)
+		account, err := db.Database.CreateAccount(tx, nrCtx)
 		if err != nil {
 			return nil, err
 		}
 
-		androidGroup, err := db.Database.CreateAndroidGroup(tx, account.ID, nrTxn)
+		androidGroup, err := db.Database.CreateAndroidGroup(tx, account.ID, nrCtx)
 		if err != nil {
 			return nil, err
 		}
 
-		android, err := db.Database.CreateAndroid(tx, account.ID, androidGroup.ID, nrTxn)
+		android, err := db.Database.CreateAndroid(tx, account.ID, androidGroup.ID, nrCtx)
 		if err != nil {
 			return nil, err
 		}
@@ -68,10 +70,10 @@ func GetAccount(c *gin.Context) {
 	}
 
 	nrTxn := nrgin.Transaction(c)
-	defer nrTxn.End()
+	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	id := c.Param("id")
-	account, err := db.Database.GetAccount(nil, id, nrTxn)
+	account, err := db.Database.GetAccount(nil, id, nrCtx)
 
 	if err != nil {
 		c.Error(err)
@@ -98,10 +100,10 @@ func DeleteAccount(c *gin.Context) {
 	}
 
 	nrTxn := nrgin.Transaction(c)
-	defer nrTxn.End()
+	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
 	id := c.Param("id")
-	err := db.Database.DeleteAccount(nil, id, nrTxn)
+	err := db.Database.DeleteAccount(nil, id, nrCtx)
 	if err != nil {
 		c.Error(err)
 	} else {

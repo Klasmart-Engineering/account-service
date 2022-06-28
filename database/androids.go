@@ -23,16 +23,14 @@ func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, androidGroupId strin
 		err = db.Conn.QueryRowContext(ctx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
 	}
 	if err != nil {
-		if err, ok := err.(*pq.Error); ok {
-			// check for android group not found
-			if err.Code == "23503" {
-				// foreign key constraint violation: https://www.postgresql.org/docs/9.3/errcodes-appendix.html
-				return android, &api_errors.APIError{
-					Status:  http.StatusNotFound,
-					Code:    api_errors.ErrCodeNotFound,
-					Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", androidGroupId),
-					Err:     err,
-				}
+		// check for android group not found via foreign key constraint violation
+		// https://www.postgresql.org/docs/9.3/errcodes-appendix.html
+		if err, ok := err.(*pq.Error); ok && err.Code == "23503" {
+			return android, &api_errors.APIError{
+				Status:  http.StatusNotFound,
+				Code:    api_errors.ErrCodeNotFound,
+				Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", androidGroupId),
+				Err:     err,
 			}
 		}
 	}

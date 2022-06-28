@@ -145,4 +145,32 @@ paths:
       summary: Create a new android in the specified android group
       tags:
       - androids
+  /androids/{id}:
+    get:
+      parameters:
+      - description: Android ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Android'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Get details of an android
+      tags:
+      - androids
 swagger: "2.0"

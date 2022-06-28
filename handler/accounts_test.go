@@ -112,7 +112,10 @@ func TestGetAccount404(t *testing.T) {
 }
 
 func TestDeleteAccount200(t *testing.T) {
-	account, _ := db.Database.CreateAccount(nil, context.Background())
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
+	android, _ := db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
 
 	url := fmt.Sprintf("/accounts/%s", account.ID)
 	request, _ := http.NewRequest("DELETE", url, nil)
@@ -123,7 +126,17 @@ func TestDeleteAccount200(t *testing.T) {
 	_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
 
 	assert.Equal(t, response.Code, 200)
-	assert.Equal(t, response.Body.String(), "Success")
+	assert.Equal(t, account.ID, data.ID)
+
+	assertNotFound := func(e error, message string) {
+		assert.EqualError(t, e, fmt.Sprintf("code %s: message %s", api_errors.ErrCodeNotFound, message))
+	}
+	_, err := db.Database.GetAccount(nil, ctx, account.ID)
+	assertNotFound(err, fmt.Sprintf(api_errors.ErrMsgNotFound, "account", account.ID))
+	_, err = db.Database.GetAndroidGroup(nil, ctx, androidGroup.ID)
+	assertNotFound(err, fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", androidGroup.ID))
+	_, err = db.Database.GetAndroid(nil, ctx, android.ID)
+	assertNotFound(err, fmt.Sprintf(api_errors.ErrMsgNotFound, "android", android.ID))
 }
 
 func TestDeleteAccount400(t *testing.T) {

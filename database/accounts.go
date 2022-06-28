@@ -46,19 +46,19 @@ func (db DB) GetAccount(tx *sql.Tx, ctx context.Context, id string) (model.Accou
 	return account, err
 }
 
-func (db DB) DeleteAccount(tx *sql.Tx, ctx context.Context, id string) error {
+func (db DB) DeleteAccount(tx *sql.Tx, ctx context.Context, id string) (model.Account, error) {
 	query := `DELETE FROM account WHERE id = $1 RETURNING id`
-	var accountId string
+	account := model.Account{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRowContext(ctx, query, id).Scan(&accountId)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&account.ID)
 	} else {
-		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&accountId)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&account.ID)
 	}
 
 	if err == sql.ErrNoRows {
-		return &api_errors.APIError{
+		return account, &api_errors.APIError{
 			Status:  http.StatusNotFound,
 			Code:    api_errors.ErrCodeNotFound,
 			Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "account", id),
@@ -66,5 +66,5 @@ func (db DB) DeleteAccount(tx *sql.Tx, ctx context.Context, id string) error {
 		}
 	}
 
-	return err
+	return account, err
 }

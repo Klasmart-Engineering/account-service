@@ -82,7 +82,7 @@ func GetAccount(c *gin.Context) {
 }
 
 // DeleteAccount ... Delete Account
-// @Summary  Delete an account
+// @Summary  Deletes an account and all associated android groups and androids
 // @Tags     accounts
 // @Param    id           path      string  true  "Account ID"
 // @Success  200          {object}  model.Account
@@ -101,10 +101,10 @@ func DeleteAccount(c *gin.Context) {
 	nrTxn := nrgin.Transaction(c)
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-	err := db.Database.DeleteAccount(nil, nrCtx, uri.ID)
+	account, err := db.Database.DeleteAccount(nil, nrCtx, uri.ID)
 	if err != nil {
 		c.Error(err)
 	} else {
-		c.String(http.StatusOK, "Success")
+		c.JSON(http.StatusOK, account)
 	}
 }

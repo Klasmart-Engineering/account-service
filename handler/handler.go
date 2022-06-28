@@ -21,6 +21,7 @@ func SetUpRouter() *gin.Engine {
 
 	r.POST("/android_groups/:id/androids", CreateAndroid)
 	r.GET("/android_groups/:id/androids", GetPaginatedAndroidsByGroup)
+	r.GET("/androids/:id", GetAndroid)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return r

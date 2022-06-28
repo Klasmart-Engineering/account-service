@@ -121,6 +121,86 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/android_groups/{id}/androids": {
+            "post": {
+                "tags": [
+                    "androids"
+                ],
+                "summary": "Create a new android in the specified android group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Android Group ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Android"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/androids/{id}": {
+            "get": {
+                "tags": [
+                    "androids"
+                ],
+                "summary": "Get details of an android",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Android ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Android"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -163,6 +243,9 @@ const docTemplate = `{
         "model.AndroidGroup": {
             "type": "object",
             "properties": {
+                "account_id": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 }

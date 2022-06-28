@@ -8,9 +8,11 @@ import (
 	api_errors "kidsloop/account-service/errors"
 	"kidsloop/account-service/model"
 	"net/http"
+
+	"github.com/lib/pq"
 )
 
-func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, accountID string, androidGroupId string) (model.Android, error) {
+func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, androidGroupId string) (model.Android, error) {
 	query := `INSERT INTO android (android_group_id) VALUES ($1) RETURNING id, android_group_id`
 	android := model.Android{}
 
@@ -19,6 +21,18 @@ func (db DB) CreateAndroid(tx *sql.Tx, ctx context.Context, accountID string, an
 		err = tx.QueryRowContext(ctx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
 	} else {
 		err = db.Conn.QueryRowContext(ctx, query, androidGroupId).Scan(&android.ID, &android.AndroidGroupID)
+	}
+	if err != nil {
+		// check for android group not found via foreign key constraint violation
+		// https://www.postgresql.org/docs/9.3/errcodes-appendix.html
+		if err, ok := err.(*pq.Error); ok && err.Code == "23503" {
+			return android, &api_errors.APIError{
+				Status:  http.StatusNotFound,
+				Code:    api_errors.ErrCodeNotFound,
+				Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "android_group", androidGroupId),
+				Err:     err,
+			}
+		}
 	}
 
 	return android, err

@@ -33,7 +33,7 @@ func CreateAccount(c *gin.Context) {
 			return nil, err
 		}
 
-		android, err := db.Database.CreateAndroid(tx, nrCtx, account.ID, androidGroup.ID)
+		android, err := db.Database.CreateAndroid(tx, nrCtx, androidGroup.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -72,8 +72,7 @@ func GetAccount(c *gin.Context) {
 	nrTxn := nrgin.Transaction(c)
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-	id := c.Param("id")
-	account, err := db.Database.GetAccount(nil, nrCtx, id)
+	account, err := db.Database.GetAccount(nil, nrCtx, uri.ID)
 
 	if err != nil {
 		c.Error(err)
@@ -102,8 +101,7 @@ func DeleteAccount(c *gin.Context) {
 	nrTxn := nrgin.Transaction(c)
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-	id := c.Param("id")
-	err := db.Database.DeleteAccount(nil, nrCtx, id)
+	err := db.Database.DeleteAccount(nil, nrCtx, uri.ID)
 	if err != nil {
 		c.Error(err)
 	} else {

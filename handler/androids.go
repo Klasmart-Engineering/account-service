@@ -30,8 +30,7 @@ func GetAndroid(c *gin.Context) {
 	nrTxn := nrgin.Transaction(c)
 	nrCtx := newrelic.NewContext(context.Background(), nrTxn)
 
-	id := c.Param("id")
-	android, err := db.Database.GetAndroid(nil, nrCtx, id)
+	android, err := db.Database.GetAndroid(nil, nrCtx, uri.ID)
 
 	if err != nil {
 		c.Error(err)

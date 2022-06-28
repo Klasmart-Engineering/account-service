@@ -107,7 +107,7 @@ func TestGetAndroid404(t *testing.T) {
 	assert.Equal(t, err.Message, fmt.Sprintf(api_errors.ErrMsgNotFound, "android", id))
 }
 
-func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
+func TestGetAndroidsByGroup200(t *testing.T) {
 	ctx := context.Background()
 	account, _ := db.Database.CreateAccount(nil, ctx)
 	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
@@ -126,7 +126,7 @@ func TestGetPaginatedAndroidsByGroup200(t *testing.T) {
 	assert.Equal(t, android.ID, data[0].ID)
 }
 
-func TestGetPaginatedAndroidsByGroup200Pages(t *testing.T) {
+func TestGetAndroidsByGroup200Pages(t *testing.T) {
 	ctx := context.Background()
 	account, _ := db.Database.CreateAccount(nil, ctx)
 	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)

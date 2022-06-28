@@ -86,7 +86,7 @@ func (db DB) DeleteAndroid(tx *sql.Tx, ctx context.Context, id string) error {
 }
 
 func (db DB) GetAndroidsByGroup(tx *sql.Tx, groupId string, offset int, pageSize int) ([]model.Android, error) {
-	query := `SELECT id, android_group_id FROM android WHERE android_group_id = $1 ORDER BY "id" OFFSET $2 LIMIT $3`
+	query := `SELECT id, android_group_id FROM android WHERE android_group_id = $1 ORDER BY id OFFSET $2 LIMIT $3`
 	androids := []model.Android{}
 
 	limit := pageSize

@@ -1,0 +1,31 @@
+name: Generate Swagger API Doc
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches-ignore:
+      - "**"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  swagger-doc-gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.18.1'
+      - name: Generate Swagger API Doc
+        run: |
+          go get -u github.com/swaggo/swag/cmd/swag
+          go install github.com/swaggo/swag/cmd/swag@latest
+          swag init
+      - name: Push Local Changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: "chore: updating Swagger API docs files"
+          branch: ${{github.head_ref}}

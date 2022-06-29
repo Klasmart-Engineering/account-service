@@ -146,6 +146,33 @@ paths:
       tags:
       - androids
   /androids/{id}:
+    delete:
+      parameters:
+      - description: Android ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Android'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.ErrorResponse'
+      summary: Deletes an android
+      tags:
+      - androids
     get:
       parameters:
       - description: Android ID

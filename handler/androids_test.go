@@ -10,6 +10,7 @@ import (
 	"kidsloop/account-service/test_util"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"testing"
 
 	"github.com/google/uuid"
@@ -105,6 +106,57 @@ func TestGetAndroid404(t *testing.T) {
 	err := data.Errors[0]
 	assert.Equal(t, err.Code, api_errors.ErrCodeNotFound)
 	assert.Equal(t, err.Message, fmt.Sprintf(api_errors.ErrMsgNotFound, "android", id))
+}
+
+func TestGetAndroidsByGroup200(t *testing.T) {
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
+	android, _ := db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
+
+	url := fmt.Sprintf("/android_groups/%s/androids", androidGroup.ID)
+	request, _ := http.NewRequest("GET", url, nil)
+	response := httptest.NewRecorder()
+	router.ServeHTTP(response, request)
+
+	var data []model.Android
+	_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
+
+	assert.Equal(t, 200, response.Code)
+	assert.Equal(t, 1, len(data))
+	assert.Equal(t, android.ID, data[0].ID)
+}
+
+func TestGetAndroidsByGroup200Pages(t *testing.T) {
+	ctx := context.Background()
+	account, _ := db.Database.CreateAccount(nil, ctx)
+	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
+
+	ids := make([]string, 0)
+	for i := 0; i < 10; i++ {
+		android, _ := db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
+		ids = append(ids, android.ID)
+	}
+	// pagination should order by ID by default
+	sort.Strings(ids)
+
+	firstPage := fmt.Sprintf("/android_groups/%s/androids?limit=5", androidGroup.ID)
+	secondPage := fmt.Sprintf("/android_groups/%s/androids?offset=5", androidGroup.ID)
+
+	for index, url := range []string{firstPage, secondPage} {
+		request, _ := http.NewRequest("GET", url, nil)
+		response := httptest.NewRecorder()
+		router.ServeHTTP(response, request)
+
+		var data []model.Android
+		_ = json.Unmarshal([]byte(response.Body.Bytes()), &data)
+
+		assert.Equal(t, 200, response.Code)
+		assert.Equal(t, 5, len(data))
+		for i := 0; i < 5; i++ {
+			assert.Equal(t, ids[i+index*5], data[i].ID)
+		}
+	}
 }
 
 func TestDeleteAndroid200(t *testing.T) {

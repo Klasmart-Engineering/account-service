@@ -20,6 +20,8 @@ func SetUpRouter() *gin.Engine {
 	r.DELETE("/accounts/:id", DeleteAccount)
 
 	r.GET("/androids/:id", GetAndroid)
+	r.DELETE("/androids/:id", DeleteAndroid)
+
 	r.GET("/android_groups/:id/androids", GetPaginatedAndroidsByGroup)
 	r.POST("/android_groups/:id/androids", CreateAndroid)
 

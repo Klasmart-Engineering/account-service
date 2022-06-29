@@ -62,19 +62,19 @@ func (db DB) GetAndroid(tx *sql.Tx, ctx context.Context, id string) (model.Andro
 	return android, err
 }
 
-func (db DB) DeleteAndroid(tx *sql.Tx, ctx context.Context, id string) error {
-	query := `DELETE FROM android WHERE id = $1 RETURNING id`
-	var androidId string
+func (db DB) DeleteAndroid(tx *sql.Tx, ctx context.Context, id string) (model.Android, error) {
+	query := `DELETE FROM android WHERE id = $1 RETURNING id, android_group_id`
+	android := model.Android{}
 
 	var err error
 	if tx != nil {
-		err = tx.QueryRowContext(ctx, query, id).Scan(&androidId)
+		err = tx.QueryRowContext(ctx, query, id).Scan(&android.ID, &android.AndroidGroupID)
 	} else {
-		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&androidId)
+		err = db.Conn.QueryRowContext(ctx, query, id).Scan(&android.ID, &android.AndroidGroupID)
 	}
 
 	if err == sql.ErrNoRows {
-		return &api_errors.APIError{
+		return android, &api_errors.APIError{
 			Status:  http.StatusNotFound,
 			Code:    api_errors.ErrCodeNotFound,
 			Message: fmt.Sprintf(api_errors.ErrMsgNotFound, "android", id),
@@ -82,7 +82,7 @@ func (db DB) DeleteAndroid(tx *sql.Tx, ctx context.Context, id string) error {
 		}
 	}
 
-	return err
+	return android, err
 }
 
 func (db DB) GetAndroidsByGroup(tx *sql.Tx, groupId string, offset int, pageSize int) ([]model.Android, error) {

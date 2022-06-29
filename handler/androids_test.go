@@ -10,6 +10,7 @@ import (
 	"kidsloop/account-service/test_util"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"testing"
 
 	"github.com/google/uuid"
@@ -131,14 +132,18 @@ func TestGetAndroidsByGroup200Pages(t *testing.T) {
 	account, _ := db.Database.CreateAccount(nil, ctx)
 	androidGroup, _ := db.Database.CreateAndroidGroup(nil, ctx, account.ID)
 
+	ids := make([]string, 0)
 	for i := 0; i < 10; i++ {
-		_, _ = db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
+		android, _ := db.Database.CreateAndroid(nil, ctx, androidGroup.ID)
+		ids = append(ids, android.ID)
 	}
+	// pagination should order by ID by default
+	sort.Strings(ids)
 
 	firstPage := fmt.Sprintf("/android_groups/%s/androids?limit=5", androidGroup.ID)
 	secondPage := fmt.Sprintf("/android_groups/%s/androids?offset=5", androidGroup.ID)
 
-	for _, url := range []string{firstPage, secondPage} {
+	for index, url := range []string{firstPage, secondPage} {
 		request, _ := http.NewRequest("GET", url, nil)
 		response := httptest.NewRecorder()
 		router.ServeHTTP(response, request)
@@ -148,6 +153,9 @@ func TestGetAndroidsByGroup200Pages(t *testing.T) {
 
 		assert.Equal(t, 200, response.Code)
 		assert.Equal(t, 5, len(data))
+		for i := 0; i < 5; i++ {
+			assert.Equal(t, ids[i+index*5], data[i].ID)
+		}
 	}
 }
 
